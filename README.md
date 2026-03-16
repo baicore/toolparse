@@ -15,23 +15,25 @@ npm install toolparse
 ## Quick Start
 
 ```ts
-import { Tool, ToolRegistry } from "toolparse";
+import { Tool, ToolRegistry, type ToolParameters } from "toolparse";
 
 type AddArgs = { a: number; b: number };
 
 const registry = new ToolRegistry();
 
-const addNumbers = new Tool<AddArgs, number>(
-  "Add two numbers.",
-  {
+const config: ToolParameters = {
+  description: "Add two numbers.",
+  args: {
     a: { type: "number", description: "First number" },
     b: { type: "number", description: "Second number" }
   },
-  ({ a, b }) => a + b,
-  "object",
-  ["a", "b"],
-  "add_numbers"
-);
+  handler: ({ a, b }) => a + b,
+  parameterType: "object",
+  required: ["a", "b"],
+  name: "add_numbers"
+};
+
+const addNumbers = new Tool<AddArgs, number>(config);
 
 registry.add(addNumbers);
 

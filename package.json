@@ -1,6 +1,6 @@
 {
     "name": "toolparse",
-    "version": "0.1.1",
+    "version": "0.1.2",
     "description": "Parses functions inside a specified directory into popular functions schema",
     "module": "dist/index.mjs",
     "types": "dist/index.d.ts",
