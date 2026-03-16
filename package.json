@@ -1,0 +1,31 @@
+{
+    "name": "toolparse",
+    "version": "0.1.0",
+    "description": "Parses functions inside a specified directory into ollama functions",
+    "module": "dist/index.mjs",
+    "types": "dist/index.d.ts",
+    "main": "dist/index.cjs",
+    "engines": {
+        "node": "14.17.6"
+    },
+    "files": [
+        "dist",
+        "README.md"
+    ],
+    "exports": {
+        ".": {
+            "require": "./dist/index.cjs",
+            "import": "./dist/index.mjs",
+            "types": "./dist/index.d.ts"
+        }
+    },
+    "scripts": {
+        "build": "unbuild",
+        "dev": "unbuild --stub",
+        "prepublishOnly": "npm run build"
+    },
+    "devDependencies": {
+        "typescript": "^5.9.3",
+        "unbuild": "^3.6.1"
+    }
+}
