@@ -1,8 +1,12 @@
 # toolparse
 
-Small TypeScript utility for defining AI tools, storing them in a registry array, and dispatching calls by tool name.
+Lightweight TypeScript utilities for defining model-callable tools and dispatching them by name.
 
-## Install
+## Requirements
+
+- Node.js >= 14.17.6
+
+## Installation
 
 ```bash
 npm install toolparse
@@ -13,44 +17,85 @@ npm install toolparse
 ```ts
 import { Tool, ToolRegistry } from "toolparse";
 
+type AddArgs = { a: number; b: number };
+
 const registry = new ToolRegistry();
 
-const addTool = new Tool(
-	"Add two numbers",
-	{
-		a: { type: "number", description: "First number" },
-		b: { type: "number", description: "Second number" }
-	},
-	({ a, b }: { a: number; b: number }) => {
-		return a + b;
-	},
-	"object",
-	["a", "b"],
-	"add_numbers"
+const addNumbers = new Tool<AddArgs, number>(
+  "Add two numbers.",
+  {
+    a: { type: "number", description: "First number" },
+    b: { type: "number", description: "Second number" }
+  },
+  ({ a, b }) => a + b,
+  "object",
+  ["a", "b"],
+  "add_numbers"
 );
 
-registry.add(addTool);
+registry.add(addNumbers);
 
-const result = await registry.dispatch<{ a: number; b: number }, number>({
-	name: "add_numbers",
-	args: { a: 2, b: 3 }
+const result = await registry.dispatch<AddArgs, number>({
+  name: "add_numbers",
+  args: { a: 2, b: 3 }
 });
 
 console.log(result); // 5
+console.log(registry.list()); // function-calling layouts
 ```
 
-## API
+## Core Concepts
 
-### `Tool`
+### Tool
 
-- Encapsulates a tool handler function and schema metadata.
-- `call(args)` runs the provided function.
-- `json()` returns an OpenAI-style function tool layout.
+`Tool<TArgs, TResult>` wraps:
 
-### `ToolRegistry`
+- A tool description
+- Argument schema (`FunctionArgs`)
+- A handler function `(args) => result`
+- Optional parameter container type (`"object" | "array"`)
+- Optional required argument keys
+- Optional explicit tool name
 
-- Stores tools in an internal array.
-- `add(tool)` registers a tool and prevents duplicate names.
-- `all` returns the current tool array.
-- `list()` returns all tool JSON layouts.
-- `dispatch({ name, args })` finds a tool by name and runs it.
+If no explicit name is provided, the handler function name is used.
+
+### Tool Registry
+
+`ToolRegistry` manages tool registration and dispatch.
+
+- `add(tool)` registers a tool by name and rejects duplicates
+- `all` returns all registered tools as an array
+- `list()` returns serialized function layouts
+- `dispatch({ name, args })` finds and executes a tool
+
+## Types
+
+The package exports all major types from its main entrypoint, including:
+
+- `ArgDefinition`
+- `FunctionArgs`
+- `ToolFunction`
+- `ParameterType`
+- `FunctionLayout`
+- `ToolCall`
+
+`ArgDefinition` supports:
+
+- `string` with `minLength`, `maxLength`, `pattern`, and `enum`
+- `number` or `integer` with `minimum`, `maximum`, and `enum`
+- `boolean`
+
+## Errors
+
+- Registering a duplicate tool name throws an error.
+- Dispatching an unknown tool name throws an error.
+
+## Build
+
+```bash
+npm run build
+```
+
+## License
+
+MIT (see `LICENSE`)
