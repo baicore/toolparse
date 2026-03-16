@@ -39,6 +39,14 @@ export interface FunctionLayout {
         };
     };
 }
+export interface ToolParameters<T extends Record<string, any>, R = any> {
+    description: string;
+    args: FunctionArgs;
+    handler: ToolFunction<T, R>;
+    parameterType?: ParameterType;
+    required?: string[];
+    name?: string;
+}
 export interface ToolCall<T = Record<string, any>> {
     name: string;
     args: T;
@@ -51,23 +59,23 @@ export class Tool<T extends Record<string, any>, R = any> {
     private readonly parameterType: ParameterType;
     private readonly required: string[];
 
-    constructor(
-        description: string,
-        args: FunctionArgs,
-        handler: ToolFunction<T, R>,
-        parameterType: ParameterType = "object",
-        required: string[] = [],
-        name?: string
-    ) {
+    constructor({
+        description,
+        args,
+        handler,
+        parameterType,
+        required,
+        name
+    }: ToolParameters<T, R>) {
         this._name = name;
         this.description = description;
         this.args = args;
         this.handler = handler;
-        this.parameterType = parameterType;
-        this.required = required;
+        this.parameterType = parameterType ?? "object";
+        this.required = required ?? [];
     }
 
-    /** Resolved name: explicit override → inferred from handler function name. */
+    /** Resolved name: explicit override -> inferred from handler function name. */
     public get name(): string {
         return this._name ?? this.handler.name;
     }
@@ -77,7 +85,7 @@ export class Tool<T extends Record<string, any>, R = any> {
         return this.handler(args);
     }
 
-    /** Serialise to the Anthropic / OpenAI function-calling wire format. */
+    /** Serialise to the Ollama / OpenAI function-calling wire format. */
     public json(): FunctionLayout {
         return {
             type: "function",
