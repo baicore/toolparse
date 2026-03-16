@@ -1,6 +1,6 @@
 {
     "name": "toolparse",
-    "version": "0.1.0",
+    "version": "0.1.1",
     "description": "Parses functions inside a specified directory into ollama functions",
     "module": "dist/index.mjs",
     "types": "dist/index.d.ts",
@@ -33,5 +33,6 @@
         "type": "git",
         "url": "git+https://github.com/baicore/toolparse.git"
     },
-    "author": "baicore"
+    "author": "baicore",
+    "license": "MIT"
 }
