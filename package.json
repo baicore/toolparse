@@ -6,10 +6,11 @@
     "types": "dist/index.d.ts",
     "main": "dist/index.cjs",
     "engines": {
-        "node": "14.17.6"
+        "node": ">=14.17.6"
     },
     "files": [
         "dist",
+        "LICENSE",
         "README.md"
     ],
     "exports": {
@@ -27,5 +28,10 @@
     "devDependencies": {
         "typescript": "^5.9.3",
         "unbuild": "^3.6.1"
-    }
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/baicore/toolparse.git"
+    },
+    "author": "baicore"
 }
