@@ -1,3 +1,9 @@
+# :no_entry: [DEPRECATED] toolparse
+
+**Note:** This repository is currently unmaintained. 
+
+---
+
 # toolparse
 
 Lightweight TypeScript utilities for defining model-callable tools and dispatching them by name.
